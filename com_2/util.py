@@ -32,6 +32,48 @@ def saveOrigindata(params,conn):
     conn.commit()
     print '数据库插入成功 =====================================================saveOrigindata!'
     cur.close()
+def saveUser(params,conn):
+    cur=conn.cursor()
+    sql = "insert into user(id,attnum,mblogNum,fansNum,name,mbrank)\
+             values(%s,%s,%s,%s,%s,%s)" 
+    #保存数据库
+    cur.execute(sql,params)
+    conn.commit()
+    print '数据库插入成功 =====================================================saveUser!'
+    cur.close()
+def saveBlog(params,conn):#`mid``attitudesCount``bid``commentsCount``createdTime``repostsCount``weibotext``uid`
+    cur=conn.cursor()
+    sql = "insert into blog(weibotext,repostsCount,commentsCount,attitudesCount,createdTime,mid,uid,bid)\
+             values(%s,%s,%s,%s,%s,%s,%s,%s)" 
+    #保存数据库
+    cur.execute(sql,params)
+    conn.commit()
+    print '数据库插入成功 =====================================================saveBlog!'
+    cur.close()
+def selectFromOrigindata(conn):
+    cur=conn.cursor()
+    sql = "select * from origindata where state='no' order by postTime DESC "
+    #保存数据库
+    cur.execute(sql)
+    rows = cur.fetchall()
+    cur.close()
+    return rows
+def getByMid(mid,conn):
+    cur=conn.cursor()
+    sql = "select * from origindata where mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    row= cur.fetchone()
+    cur.close()
+    return row
+def changeStateToYes(mid,conn):
+    cur=conn.cursor()
+    sql = "UPDATE origindata SET state = 'yes' WHERE mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '状态更改成功 =====================================================state!'
+    cur.close()
 #if __name__ == '__main__':
     #print timestamp2string(1470026978)#1470026978 
     #print string2timestamp('2016-08-01 12:49:38.000000')#2016-08-01 12:49:38.000000
