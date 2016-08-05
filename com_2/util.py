@@ -58,6 +58,14 @@ def selectFromOrigindata(conn):
     rows = cur.fetchall()
     cur.close()
     return rows
+def selectFromOrigindata2(conn):
+    cur=conn.cursor()
+    sql = "select * from origindata where userstate='未处理' order by postTime DESC "
+    #保存数据库
+    cur.execute(sql)
+    rows = cur.fetchall()
+    cur.close()
+    return rows
 def getByMid(mid,conn):
     cur=conn.cursor()
     sql = "select * from origindata where mid='%s'"%mid
@@ -69,6 +77,22 @@ def getByMid(mid,conn):
 def changeStateToYes(mid,conn):
     cur=conn.cursor()
     sql = "UPDATE origindata SET state = 'yes' WHERE mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '状态更改成功 =====================================================state!'
+    cur.close()
+def changeStateTohandle(mid,conn):
+    cur=conn.cursor()
+    sql = "UPDATE origindata SET userstate='已处理' WHERE mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '状态更改成功 =====================================================state!'
+    cur.close()
+def changeStateToNone(mid,conn):
+    cur=conn.cursor()
+    sql = "UPDATE origindata SET state = 'none' WHERE mid='%s'"%mid
     #保存数据库
     cur.execute(sql)
     conn.commit()
