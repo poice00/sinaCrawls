@@ -6,7 +6,7 @@ Created on 2016年8月2日
 '''
 import requests,re,util,globals,time,datetime
 def getFromMid1(url):
-    cookies = open('user3').readline()#
+    cookies = open('user5').readline()#
     headers = {
                'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0',
                'cookie': cookies
@@ -25,7 +25,7 @@ def getFromMid1(url):
 #         print 'uid: ',url.split("/")[-2]  
 #         print 'bid: ',url.split("/")[-1] 
 def getFromMid2(url):
-    cookies = open('user3').readline()#
+    cookies = open('user5').readline()#
     headers = {
                'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0',
                'cookie': cookies
@@ -46,7 +46,7 @@ def getFromMid2(url):
 #         print 'bid: ',url.split("/")[-1]  
 #         #writer(data,'D:/eclipse_workspace/Crawls/com_2/data')
 def getFromUid(url):
-    cookies = open('user3').readline()#
+    cookies = open('user5').readline()#
     headers = {
                'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0',
                'cookie': cookies
