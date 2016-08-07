@@ -98,6 +98,14 @@ def changeStateToNone(mid,conn):
     conn.commit()
     print '状态更改成功 =====================================================state!'
     cur.close()
+def readBlogData(conn):
+    cur=conn.cursor()
+    sql = "select * from blog where state='未处理' order by createdTime DESC "
+    #保存数据库
+    cur.execute(sql)
+    rows = cur.fetchall()
+    cur.close()
+    return rows
 #if __name__ == '__main__':
     #print timestamp2string(1470026978)#1470026978 
     #print string2timestamp('2016-08-01 12:49:38.000000')#2016-08-01 12:49:38.000000
