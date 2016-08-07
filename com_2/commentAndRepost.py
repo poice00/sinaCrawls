@@ -6,7 +6,7 @@ Created on 2016年8月5日
 '''
 from com_2.util import readBlogData
 from com_2 import globals
-import requests,re
+import requests,re,json
 def getDatas(url,page,type):
     print page,type
     cookies = open('ssy').readline()#
@@ -22,6 +22,12 @@ def getDatas(url,page,type):
           }
     html = requests.get(url,headers=headers,params=data,timeout=5)
     print html.text
+    data = html.json()['data']
+    for d in data:
+        print '.............'
+        print d['text']
+        print d['user']['id']
+        print d['user']['screen_name']
 #     reg=r''
 #     dataList = re.findall(reg, html.text, re.S)
 #     return dataList
