@@ -13,5 +13,11 @@ if __name__ == '__main__':
 #     row = util.getByMid('E1zIW2nhQ', globals.conn)
 #     print row[0],row[1],row[2],row[3]
     a = 3;
-    for i in range(1,a+1):
-        print i
+    try:
+        for i in range(10):
+            for j in range(10):
+                print j
+                if j==2:
+                    raise Exception("break")
+    except:
+        pass

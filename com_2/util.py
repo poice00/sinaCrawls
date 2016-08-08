@@ -50,6 +50,23 @@ def saveBlog(params,conn):#`mid``attitudesCount``bid``commentsCount``createdTime
     conn.commit()
     print '数据库插入成功 =====================================================saveBlog!'
     cur.close()
+def saveToRepoRelation(params,conn):#`mid``attitudesCount``bid``commentsCount``createdTime``repostsCount``weibotext``uid`
+    cur=conn.cursor()
+    sql = "insert into repostrelation(mid,uid,content)\
+             values(%s,%s,%s)" 
+    #保存数据库
+    cur.execute(sql,params)
+    conn.commit()
+    print '数据库插入成功 ==========saveToRepoRelation!'
+def saveToCommRelation(params,conn):#`mid``attitudesCount``bid``commentsCount``createdTime``repostsCount``weibotext``uid`
+    cur=conn.cursor()
+    sql = "insert into commentrelation(id,mid,uid,content)\
+             values(%s,%s,%s,%s)" 
+    #保存数据库
+    cur.execute(sql,params)
+    conn.commit()
+    print '数据库插入成功 ==========saveToCommRelation!'
+    cur.close()
 def selectFromOrigindata(conn):
     cur=conn.cursor()
     sql = "select * from origindata where state='no' order by postTime DESC "
@@ -85,6 +102,20 @@ def changeStateToYes(mid,conn):
 def changeStateTohandle(mid,conn):
     cur=conn.cursor()
     sql = "UPDATE origindata SET userstate='已处理' WHERE mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '状态更改成功 =====================================================state!'
+def changeBlogStateTohandle(mid,conn):
+    cur=conn.cursor()
+    sql = "UPDATE blog SET state='已处理' WHERE mid='%s'"%mid
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '状态更改成功 =====================================================state!'
+def changeBlogStateToNoHandle(mid,conn):
+    cur=conn.cursor()
+    sql = "UPDATE blog SET state='未处理' WHERE mid='%s'"%mid
     #保存数据库
     cur.execute(sql)
     conn.commit()
