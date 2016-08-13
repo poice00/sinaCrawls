@@ -46,14 +46,18 @@ def getFromMid2(url):
 #         print 'bid: ',url.split("/")[-1]  
 #         #writer(data,'D:/eclipse_workspace/Crawls/com_2/data')
 def getFromUid(url):
-    cookies = open('user2').readline()#
+    cookies = open('user1').readline()#
     headers = {
                'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0',
                'cookie': cookies
     }
     html = requests.get(url,headers=headers,timeout=1)
     reg=r'h5icon.+?id":"(.+?)",.+?"attNum":"(.+?)",.+?"mblogNum":"(.+?)","fansNum":"(.+?)",.+?"name":"(.+?)",.+?"mbrank":"(.+?)",'
-    dataList = re.findall(reg, html.text, re.S)
+    if(html.status_code==200):
+        dataList = re.findall(reg, html.text, re.S)
+        return dataList
+    else:
+        return 'F'
 #     for data in dataList:
 #         print '.....................'
 #         print 'id: ',data[0]
@@ -62,53 +66,55 @@ def getFromUid(url):
 #         print 'fansNum: ',data[3]    
 #         print 'name: ',data[4].decode('unicode-escape') 
 #         print 'mbrank: ',data[5]  
-    return dataList
 if __name__ == '__main__':
     baseurl = 'http://m.weibo.cn/'
     #dataList=open('zsina','r').readlines()
     #datalist = util.selectFromOrigindata(globals.conn)
-    datalist = util.selectFromOrigindata2(globals.conn)
+#     datalist = util.selectFromOrigindata2(globals.conn)
+    datalist = util.selectFromBlog(globals.conn)
     for data in datalist:
         print '.................'
-        authorUrl = baseurl + 'u/' + data[2];
-        blogUrl = baseurl + data[2] + '/' + data[0]
+        authorUrl = baseurl + 'u/' + data[6];
+        blogUrl = baseurl + data[6] + '/' + data[0]
         print authorUrl,blogUrl,data[1]
         try:
             #抓取用户内容
             userList = getFromUid(authorUrl)
-            if(userList):
-                for user in userList:#id,attnum,mblogNum,mbrank,name
-                    try:
-                        params = (user[0],user[1],user[2],user[3],user[4].decode('unicode-escape') ,user[5])
-                        util.saveUser(params,globals.conn)
-                        util.changeStateTohandle(data[0], globals.conn)
-                    except Exception,e:
-                        print 'saveUser-failed!..','exception is: ',e
+            if(userList=='F'):
+                    raise Exception("break")
             else:
-                print 'user not exist!'
+                if(userList):
+                    for user in userList:#id,attnum,mblogNum,mbrank,name
+                        try:
+                            params = (user[0],user[1],user[2],user[3],user[4].decode('unicode-escape') ,user[5])
+                            util.saveUser(params,globals.conn)
+                        except Exception,e:
+                            print 'saveUser-failed!..','exception is: ',e
+                    util.changeBlogStateTohandle(data[0], globals.conn)
+        except :
+            print '..............................data false!...........................................'
+            util.changeBlogStateToNoHandle(data[0], globals.conn)
             #抓取微博内容
-            blogList = getFromMid1(blogUrl)
-            if(blogList):
-                for blog in blogList:#id,attnum,mblogNum,mbrank,name
-                    try:
-                        params = (blog[0].decode('unicode-escape'),blog[1],blog[2],blog[3],util.timestamp2string(float(blog[4])),blog[5],blogUrl.split("/")[-2],blogUrl.split("/")[-1])
-                        print blog[0].decode('unicode-escape')
-                        util.saveBlog(params,globals.conn)
-                        util.changeStateToYes(data[0], globals.conn)
-                    except Exception,e:
-                        print 'saveBlog-failed!..','exception is: ',e
-            elif(getFromMid2(blogUrl)):
-                blogList2 = getFromMid2(blogUrl)
-                for blog in blogList2:#id,attnum,mblogNum,mbrank,name
-                    try:
-                        params = (blog[1],blog[2],blog[3],blog[4],blog[0],blog[5],blogUrl.split("/")[-2],blogUrl.split("/")[-1])
-                        util.saveBlog(params,globals.conn)
-                        util.changeStateToYes(data[0], globals.conn)
-                    except Exception,e:
-                        print 'saveBlog2-failed!..','exception is: ',e
-            else:
-                print 'not exist！'#http://m.weibo.cn/5886575504/E1I7E1S4S
-                util.changeStateToNone(data[0], globals.conn)
-        except Exception,e:
-            print 'sfailed!..','exception is: ',e
+#             blogList = getFromMid1(blogUrl)
+#             if(blogList):
+#                 for blog in blogList:#id,attnum,mblogNum,mbrank,name
+#                     try:
+#                         params = (blog[0].decode('unicode-escape'),blog[1],blog[2],blog[3],util.timestamp2string(float(blog[4])),blog[5],blogUrl.split("/")[-2],blogUrl.split("/")[-1])
+#                         print blog[0].decode('unicode-escape')
+#                         util.saveBlog(params,globals.conn)
+#                         util.changeStateToYes(data[0], globals.conn)
+#                     except Exception,e:
+#                         print 'saveBlog-failed!..','exception is: ',e
+#             elif(getFromMid2(blogUrl)):
+#                 blogList2 = getFromMid2(blogUrl)
+#                 for blog in blogList2:#id,attnum,mblogNum,mbrank,name
+#                     try:
+#                         params = (blog[1],blog[2],blog[3],blog[4],blog[0],blog[5],blogUrl.split("/")[-2],blogUrl.split("/")[-1])
+#                         util.saveBlog(params,globals.conn)
+#                         util.changeStateToYes(data[0], globals.conn)
+#                     except Exception,e:
+#                         print 'saveBlog2-failed!..','exception is: ',e
+#             else:
+#                 print 'not exist！'#http://m.weibo.cn/5886575504/E1I7E1S4S
+#                 util.changeStateToNone(data[0], globals.conn)
     
