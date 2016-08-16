@@ -13,11 +13,18 @@ if __name__ == '__main__':
 #     row = util.getByMid('E1zIW2nhQ', globals.conn)
 #     print row[0],row[1],row[2],row[3]
     a = 3;
-    try:
-        for i in range(10):
-            for j in range(10):
-                print j
-                if j==2:
-                    raise Exception("break")
-    except:
-        pass
+#     try:
+#         for i in range(10):
+#             for j in range(10):
+#                 print j
+#                 if j==2:
+#                     raise Exception("break")
+#     except:
+#         pass
+    s = set()
+    if(s):
+        print "not none!"
+        for i in range(50000):
+            s.add(i)
+    else:
+        print "none"

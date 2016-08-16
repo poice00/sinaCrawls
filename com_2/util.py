@@ -31,6 +31,14 @@ def saveOrigindata(params,conn):
     cur.execute(sql,params)
     conn.commit()
     print '数据库插入成功 =====================================================saveOrigindata!'
+def saveToUserRelation(params,conn):
+    cur=conn.cursor()
+    sql = "insert into userrelation(fromId,toId)\
+             values(%s,%s)" 
+    #保存数据库
+    cur.execute(sql,params)
+    conn.commit()
+    print '数据库插入成功 =====================================================saveToUserRelation!'
     cur.close()
 def saveUser2(params,conn):
     cur=conn.cursor()
@@ -136,7 +144,13 @@ def changeRepoStateToYes(mid,uid,conn):
     #保存数据库
     cur.execute(sql)
     conn.commit()
-    print '===============changeRepoStateToYes!'
+def changeUserStateTohandle(id,conn):
+    cur=conn.cursor()
+    sql = "UPDATE user SET state = '已处理' WHERE id='%s'"%id
+    #保存数据库
+    cur.execute(sql)
+    conn.commit()
+    print '===============changeUserStateTohandle!'
 def changeCommStateToYes(id,conn):
     cur=conn.cursor()
     sql = "UPDATE commentrelation SET state = 'yes' WHERE id='%s'"%id
@@ -178,6 +192,14 @@ def changeStateToNone(mid,conn):
 def readBlogData(conn):
     cur=conn.cursor()
     sql = "select * from blog where state='未处理' order by createdTime DESC "
+    #保存数据库
+    cur.execute(sql)
+    rows = cur.fetchall()
+    cur.close()
+    return rows
+def readUserData(conn):
+    cur=conn.cursor()
+    sql = "select id from user where state='未处理'"
     #保存数据库
     cur.execute(sql)
     rows = cur.fetchall()
