@@ -8,7 +8,7 @@ from com_2.util import readBlogData
 from com_2 import globals
 import requests,re,json,util,uuid
 def getDatas(url,page,id):
-    cookies = open('user1').readline()#
+    cookies = open('user3').readline()#
     headers = {
                'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0',
                'cookie': cookies
@@ -32,38 +32,39 @@ def getDatas(url,page,id):
         return 'F'
 
 if __name__ == '__main__':
-    userIdData = util.readUserData(globals.conn)
+    userIdData = util.readBlogUidrData(globals.conn)
+    userrealIdData = util.readUserUidData(globals.conn)
     print 'start..'
     #处理每一个用户
     for data in userIdData:
         baseUrl = 'http://m.weibo.cn/page/json'
-        print data[0]#id
+        print data[0],data[1]#uid
         #计算页数
         page = 20
         try:
             for page in range(1,page+1):
                 print '..The current page is: ',page
                 userIdList = getDatas(baseUrl,page,data[0])
+                print 'userIdList len: ' ,len(userIdList)
                 if(userIdList=='F'):
                     #如果返回值不是200
                     raise Exception("break")
                 else:
                     #将评论存入数据库
                     if(userIdList):
+                        #遍历用户的粉丝
                         for userId in userIdList:
-                            #遍历用户的粉丝
-                            if(userId in userIdData):
-                                print '=====================================its in user!'
+                            if(userId in userrealIdData):
                                 try:
                                     params = (userId,data[0])
                                     util.saveToUserRelation(params,globals.conn)
                                 except Exception,e:
                                     print 'saveToUserRelation false!','exception is: ',e
-                            else: 
-                                print 'not in user!'
+                            else:
+                                print 'not in user!' 
                     else:
                         break
-            util.changeUserStateTohandle(data[0],globals.conn)
+            util.changeBlogStateTohandle(data[1],globals.conn)
         except :
             print '.....data false!...........................................'
     print 'end..'

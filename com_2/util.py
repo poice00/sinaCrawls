@@ -197,9 +197,17 @@ def readBlogData(conn):
     rows = cur.fetchall()
     cur.close()
     return rows
-def readUserData(conn):
+def readBlogUidrData(conn):
     cur=conn.cursor()
-    sql = "select id from user where state='未处理'"
+    sql = "select uid,mid from blog where state='未处理'"
+    #保存数据库
+    cur.execute(sql)
+    rows = cur.fetchall()
+    cur.close()
+    return rows
+def readUserUidData(conn):
+    cur=conn.cursor()
+    sql = "select id from user"
     #保存数据库
     cur.execute(sql)
     rows = cur.fetchall()
